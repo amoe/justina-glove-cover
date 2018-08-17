@@ -70,3 +70,5 @@ For full implementation with Old Bailey Voice Corpus, see `main.py`.
 - Pennington J., Socher R. and Manning C.D., ACL (2014). [GloVe: Global Vectors for Word Representation](https://www.aclweb.org/anthology/D14-1162).
 - Tian K., Zhang T. and Zou J., ArXiV (2018). [CoVeR: Learing Covariate-Specific Vector Representations with Tensor Decompositions](https://arxiv.org/pdf/1802.07839.pdf).
 - Simon, G. (2017). tensorflow-glove, GitHub Repository [online] Available at: https://github.com/GradySimon/tensorflow-glove
+
+Yow! x1
