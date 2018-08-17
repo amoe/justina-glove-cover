@@ -62,8 +62,8 @@ def write_file(file_path, dic):
 
 def main():
   [female_speech, male_speech] = get_corpus()
-  parsed_female_corpus = get_parsed_corpus(female_speech,10)
-  parsed_male_corpus = get_parsed_corpus(male_speech,10)
+  parsed_female_corpus = get_parsed_corpus(female_speech,int(len(female_speech)))
+  parsed_male_corpus = get_parsed_corpus(male_speech,int(len(male_speech)))
   parsed_corpora = [parsed_female_corpus] + [parsed_male_corpus]
   cover = CoVeRModel(embedding_size=300,context_size=10,min_occurrences=5,learning_rate=0.05,batch_size=512)
   cover.fit_corpora(parsed_corpora)
