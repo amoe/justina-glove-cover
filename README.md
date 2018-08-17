@@ -26,3 +26,5 @@ The input file is expected to be found at
 The `quan` parameter accepted by `get_parsed_corpus` is used to restrict the
 corpus to a small set of examples.  Pass the length of the corpus to run the
 model over the entire corpus.
+
+The entry point is `main.main()`.
