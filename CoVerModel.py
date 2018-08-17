@@ -1,4 +1,4 @@
-from tensorflowglove.tf_glove import GloVeModel
+from ext.tensorflowglove.tf_glove import GloVeModel
 from collections import defaultdict
 import os
 from random import shuffle
