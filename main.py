@@ -85,6 +85,8 @@ def main(limit=None):
     male_embedding = np.stack((male_embedding,ma), axis=1)
     female_embedding = np.stack((female_embedding,fe), axis=1)
 
+    # XXX: Now that the model is deterministic, this is pretty futile
+    # because the result isn't going to change from run to run anyway. -- amoe
     for i in range(3):
       cover.train()
       [fe,ma,_] = analysis(cover)
@@ -97,12 +99,6 @@ def main(limit=None):
       ma = ma.reshape(n,1,m)
       male_embedding = np.append(male_embedding,ma,axis=1)
 
-    with open('fe.json', 'w') as f:
-        json.dump(fe.tolist(), f)
-
-    with open('me.json', 'w') as f:
-        json.dump(ma.tolist(), f)
-
     female_avg = avg(female_embedding)
     fpath = os.getcwd() + '/female'
     cover.generate_tsne(path=fpath, embeddings=female_avg)
@@ -112,3 +108,13 @@ def main(limit=None):
     cover.generate_tsne(path=mpath, embeddings=male_avg)
 
     print('FINISHED')
+
+    with open('fe.json', 'w') as f:
+        json.dump(female_avg.tolist(), f)
+
+    with open('me.json', 'w') as f:
+        json.dump(male_avg.tolist(), f)
+    return {
+        'female_embedding': female_avg.tolist(),
+        'male_embedding': male_avg.tolist()
+    }
