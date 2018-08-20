@@ -1,5 +1,7 @@
 # test skeleton
 
+import main
+
 def inc(x):
     return x + 1
 
