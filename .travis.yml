@@ -1,2 +1,6 @@
 # travis.yml
-- language: python
+language: python
+python:
+  - "3.6"
+script:
+  - pytest
