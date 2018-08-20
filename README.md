@@ -71,4 +71,4 @@ For full implementation with Old Bailey Voice Corpus, see `main.py`.
 - Tian K., Zhang T. and Zou J., ArXiV (2018). [CoVeR: Learing Covariate-Specific Vector Representations with Tensor Decompositions](https://arxiv.org/pdf/1802.07839.pdf).
 - Simon, G. (2017). tensorflow-glove, GitHub Repository [online] Available at: https://github.com/GradySimon/tensorflow-glove
 
-Yow! x1
+Yow! x2
