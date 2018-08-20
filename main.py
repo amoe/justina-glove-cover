@@ -6,6 +6,7 @@ import os
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+import json
 
 nlp = spacy.load('en_core_web_md')
 sess = tf.InteractiveSession()
@@ -60,10 +61,18 @@ def write_file(file_path, arr):
             np.savetxt(outfile, data_slice, fmt='%-7f')
             outfile.write('\n# New slice\n\n')
 
-def main():
+def main(limit=None):
     [female_speech, male_speech] = get_corpus()
-    parsed_female_corpus = get_parsed_corpus(female_speech,int(len(female_speech)))
-    parsed_male_corpus = get_parsed_corpus(male_speech,int(len(male_speech)))
+
+    if limit is None:
+        female_limit = int(len(female_speech))
+        male_limit = int(len(male_speech))
+    else:
+        female_limit = limit
+        male_limit = limit
+
+    parsed_female_corpus = get_parsed_corpus(female_speech, female_limit)
+    parsed_male_corpus = get_parsed_corpus(male_speech, male_limit)
     parsed_corpora = [parsed_female_corpus] + [parsed_male_corpus]
     cover = CoVeRModel(embedding_size=300,context_size=10,min_occurrences=5,learning_rate=0.05,batch_size=512)
     cover.fit_corpora(parsed_corpora)
@@ -88,6 +97,11 @@ def main():
       ma = ma.reshape(n,1,m)
       male_embedding = np.append(male_embedding,ma,axis=1)
 
+    with open('fe.json', 'w') as f:
+        json.dump(fe.tolist(), f)
+
+    with open('me.json', 'w') as f:
+        json.dump(ma.tolist(), f)
 
     female_avg = avg(female_embedding)
     fpath = os.getcwd() + '/female'
