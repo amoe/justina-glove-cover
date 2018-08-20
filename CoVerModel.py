@@ -1,10 +1,12 @@
 from ext.tensorflowglove.tf_glove import GloVeModel
 from collections import defaultdict
 import os
-from random import shuffle
 import tensorflow as tf
+from random import shuffle
 
 print('COVER MODEL')
+
+TF_SEED = 0
 
 class NotFitToCorpusError(Exception):
     pass
@@ -82,19 +84,26 @@ class CoVeRModel(GloVeModel):
                                                      name='covariance')
 
             focal_embeddings = tf.Variable(
-                tf.random_uniform([self.__vocab_size, self.embedding_size], 1.0, -1.0),
-                name='focal_embeddings')
+                tf.random_uniform([self.__vocab_size, self.embedding_size], 1.0, -1.0, seed=TF_SEED),
+                name='focal_embeddings'
+            )
             context_embeddings = tf.Variable(
-                tf.random_uniform([self.__vocab_size, self.embedding_size], 1.0, -1.0),
-                name='context_embeddings')
+                tf.random_uniform([self.__vocab_size, self.embedding_size], 1.0, -1.0, seed=TF_SEED),
+                name='context_embeddings'
+            )
             covariance_embeddings = tf.Variable(
-                tf.random_uniform([self.k, self.embedding_size], 1.0, -1.0),
-                name='covariance_embeddings')
+                tf.random_uniform([self.k, self.embedding_size], 1.0, -1.0, seed=TF_SEED),
+                name='covariance_embeddings'
+            )
 
-            focal_biases = tf.Variable(tf.random_uniform([self.__vocab_size, self.k], 1.0, -1.0),
-                                       name='focal_biases')
-            context_biases = tf.Variable(tf.random_uniform([self.__vocab_size, self.k], 1.0, -1.0),
-                                         name='context_biases')
+            focal_biases = tf.Variable(
+                tf.random_uniform([self.__vocab_size, self.k], 1.0, -1.0, seed=TF_SEED),
+                name='focal_biases'
+            )
+            context_biases = tf.Variable(
+                tf.random_uniform([self.__vocab_size, self.k], 1.0, -1.0, seed=TF_SEED),
+                name='context_biases'
+            )
 
             focal_embedding = tf.nn.embedding_lookup([focal_embeddings], self.__focal_input)
             context_embedding = tf.nn.embedding_lookup([context_embeddings], self.__context_input)
