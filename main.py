@@ -11,41 +11,41 @@ nlp = spacy.load('en_core_web_md')
 sess = tf.InteractiveSession()
 
 def get_corpus():
-  print('getting corpus data')
-  fpath = 'voa/OBV2/obv_words_v2_28-01-2017.tsv'
-  df = pd.read_csv(fpath, sep='\t')
+    print('getting corpus data')
+    fpath = 'voa/OBV2/obv_words_v2_28-01-2017.tsv'
+    df = pd.read_csv(fpath, sep='\t')
 
-  female_speech = df.loc[(df['obc_sex'] == 'f') & (df['obc_hiscoLabel'] != 'Lawyer'),'words']
-  male_speech = df.loc[df['obc_sex'] == 'm','words'] # male speech including lawyers
+    female_speech = df.loc[(df['obc_sex'] == 'f') & (df['obc_hiscoLabel'] != 'Lawyer'),'words']
+    male_speech = df.loc[df['obc_sex'] == 'm','words'] # male speech including lawyers
 
-  return female_speech,male_speech
+    return female_speech,male_speech
 
 
 def get_parsed_corpus(speech,quan):
-  print('getting spacy parsed corpus')
-  # used spacy for the parsing and get the pos to find the similarities
-  parsed_speech = [nlp(speech.iloc[i]) for i in range(quan)]
-  # remove punctuations
-  parsed_speech_corpus = [[word.text for word in sen if word.text not in string.punctuation] for sen in parsed_speech]
+    print('getting spacy parsed corpus')
+    # used spacy for the parsing and get the pos to find the similarities
+    parsed_speech = [nlp(speech.iloc[i]) for i in range(quan)]
+    # remove punctuations
+    parsed_speech_corpus = [[word.text for word in sen if word.text not in string.punctuation] for sen in parsed_speech]
 
-  return parsed_speech_corpus
+    return parsed_speech_corpus
 
 def analysis(cover):
-  #### ANALYSIS ####
-  print('ANALYSIS')
-  covariates = cover.covariates
-  [female, male] = cover._CoVeRModel__words
-  embeddings = cover.embeddings
-  
-  female_embedding = tf.multiply(embeddings,covariates[0])
-  female_embedding = sess.run(female_embedding)
-  
-  male_embedding = tf.multiply(embeddings,covariates[1])
-  male_embedding = sess.run(male_embedding)
-  
-  common_words = list(set(female).intersection(male))
-  
-  return female_embedding,male_embedding,common_words
+    #### ANALYSIS ####
+    print('ANALYSIS')
+    covariates = cover.covariates
+    [female, male] = cover._CoVeRModel__words
+    embeddings = cover.embeddings
+
+    female_embedding = tf.multiply(embeddings,covariates[0])
+    female_embedding = sess.run(female_embedding)
+
+    male_embedding = tf.multiply(embeddings,covariates[1])
+    male_embedding = sess.run(male_embedding)
+
+    common_words = list(set(female).intersection(male))
+
+    return female_embedding,male_embedding,common_words
 
 def avg(arr):
     avg = np.mean(arr, axis=1)
@@ -61,40 +61,40 @@ def write_file(file_path, arr):
             outfile.write('\n# New slice\n\n')
 
 def main():
-  [female_speech, male_speech] = get_corpus()
-  parsed_female_corpus = get_parsed_corpus(female_speech,int(len(female_speech)))
-  parsed_male_corpus = get_parsed_corpus(male_speech,int(len(male_speech)))
-  parsed_corpora = [parsed_female_corpus] + [parsed_male_corpus]
-  cover = CoVeRModel(embedding_size=300,context_size=10,min_occurrences=5,learning_rate=0.05,batch_size=512)
-  cover.fit_corpora(parsed_corpora)
-  cover.train()
+    [female_speech, male_speech] = get_corpus()
+    parsed_female_corpus = get_parsed_corpus(female_speech,int(len(female_speech)))
+    parsed_male_corpus = get_parsed_corpus(male_speech,int(len(male_speech)))
+    parsed_corpora = [parsed_female_corpus] + [parsed_male_corpus]
+    cover = CoVeRModel(embedding_size=300,context_size=10,min_occurrences=5,learning_rate=0.05,batch_size=512)
+    cover.fit_corpora(parsed_corpora)
+    cover.train()
 
-  [female_embedding,male_embedding,common_words] = analysis(cover)
+    [female_embedding,male_embedding,common_words] = analysis(cover)
 
-  cover.train()
-  [fe,ma,_] = analysis(cover)
-  male_embedding = np.stack((male_embedding,ma), axis=1)
-  female_embedding = np.stack((female_embedding,fe), axis=1)
-
-  for i in range(3):
     cover.train()
     [fe,ma,_] = analysis(cover)
-    n = cover._CoVeRModel__vocab_size
-    m = cover.embedding_size
+    male_embedding = np.stack((male_embedding,ma), axis=1)
+    female_embedding = np.stack((female_embedding,fe), axis=1)
 
-    fe = fe.reshape(n,1,m)
-    female_embedding = np.append(female_embedding,fe,axis=1)
+    for i in range(3):
+      cover.train()
+      [fe,ma,_] = analysis(cover)
+      n = cover._CoVeRModel__vocab_size
+      m = cover.embedding_size
 
-    ma = ma.reshape(n,1,m)
-    male_embedding = np.append(male_embedding,ma,axis=1)
+      fe = fe.reshape(n,1,m)
+      female_embedding = np.append(female_embedding,fe,axis=1)
+
+      ma = ma.reshape(n,1,m)
+      male_embedding = np.append(male_embedding,ma,axis=1)
 
 
-  female_avg = avg(female_embedding)
-  fpath = os.getcwd() + '/female'
-  cover.generate_tsne(path=fpath, embeddings=female_avg)
+    female_avg = avg(female_embedding)
+    fpath = os.getcwd() + '/female'
+    cover.generate_tsne(path=fpath, embeddings=female_avg)
 
-  male_avg = avg(male_embedding)
-  mpath = os.getcwd() + '/male'
-  cover.generate_tsne(path=mpath, embeddings=male_avg)
+    male_avg = avg(male_embedding)
+    mpath = os.getcwd() + '/male'
+    cover.generate_tsne(path=mpath, embeddings=male_avg)
 
-  print('FINISHED')
+    print('FINISHED')

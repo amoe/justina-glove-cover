@@ -65,6 +65,12 @@ The format of the corpora required for `fit_corpora` are multidimensional iterab
  ```
 For full implementation with Old Bailey Voice Corpus, see `main.py`.
 
+## Parameterization notes
+
+An important parameter is the second formal parameter `quan` to
+`get_parsed_corpus`.  This is going to restrict the number of records used in the
+analysis.  It is essentially a limit.
+
 ## References
 
 - Pennington J., Socher R. and Manning C.D., ACL (2014). [GloVe: Global Vectors for Word Representation](https://www.aclweb.org/anthology/D14-1162).
