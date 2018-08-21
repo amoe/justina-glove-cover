@@ -7,4 +7,4 @@ install:
   - python -m spacy download en_core_web_md
   - sh bootstrap.sh
 script:
-  - pytest test.py
+  - MPLBACKEND=agg pytest test.py
