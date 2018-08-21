@@ -15,6 +15,7 @@ https://github.com/GradySimon/tensorflow-glove
 - v2.0.11 spacy with `eng_core_web_md` installed in v2.0.0
 - v1.15.0 numpy
 - v0.19.2 scikit-learn
+  v1.1.0  scipy
 
 ## Data set
 You can find the Old Bailey Voice Corpus here:
