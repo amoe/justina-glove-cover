@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import csv
 import pprint
+import io
 
 schema = {
     'obv2wid': int,
@@ -24,9 +25,8 @@ schema = {
     'defendant': str
 }
 
-print('getting corpus data')
 fpath = 'voa/OBV2/obv_words_v2_28-01-2017.tsv'
-#df = pd.read_csv(fpath, sep='\t', dtype=schema)
+
 
 all_rows = []
 
@@ -51,13 +51,24 @@ print("Read %d rows" % len(all_rows))
 
 
 print("Writing fixed version")
-with open('fixed.tsv', 'w') as csvfile:
-    writer = csv.DictWriter(csvfile, fieldnames=schema.keys(), delimiter='\t', quoting=csv.QUOTE_ALL)
 
-    writer.writeheader()
-    for row in all_rows:
-        writer.writerow(row)
-print("Done fixing data")
+output = io.StringIO()
+writer = csv.DictWriter(output, fieldnames=schema.keys(), delimiter='\t', quoting=csv.QUOTE_ALL)
+
+writer.writeheader()
+for row in all_rows:
+    writer.writerow(row)
+
+
+print("Done fixing data, stream pos = %d" % output.tell())
 
 
 # reveals an error in the source
+
+print('getting corpus data')
+
+
+output.seek(0)
+df = pd.read_csv(output, sep='\t', dtype=schema)
+
+#output.close()

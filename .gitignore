@@ -2,3 +2,4 @@ ext/
 voa/
 .pytest_cache/
 __pycache__/
+data/
