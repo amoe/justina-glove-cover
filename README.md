@@ -12,7 +12,7 @@ https://github.com/GradySimon/tensorflow-glove
 ## Prerequisite
 - v1.0.0 tensorflow
 - v0.20.1 pandas
-- v2.0.11 spacy with `eng_core_web_md` installed in v2.0.0
+- v2.0.11 spacy with `en_core_web_md` installed in v2.0.0
 - v1.15.0 numpy
 - v0.19.2 scikit-learn
   v1.1.0  scipy
