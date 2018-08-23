@@ -30,22 +30,24 @@ fpath = 'voa/OBV2/obv_words_v2_28-01-2017.tsv'
 
 all_rows = []
 
+def row_is_misaligned(row):
+    try:
+        word_count = int(row['words_count'])
+        return False
+    except ValueError as e:
+        return True
+
+def fix_misaligned_row(row):
+    return row
+
 with open(fpath, 'r') as f:
     reader = csv.DictReader(f, skipinitialspace=True, delimiter='\t')
 
     for index, row in enumerate(reader):
-        if row['obv2wid'] == '20442':
-            new_row = row.copy()
+        if row_is_misaligned(row):
+            row = fix_misaligned_row(row)
 
-            # These values were shifted by one, and the words type is missing.
-            # I have inferred it manually
-            new_row['defendant'] = row['words_count']
-            new_row['words_count'] = row['obv_words_type']
-            new_row['obv_words_type'] = 'd'
-            
-            all_rows.append(new_row)
-        else:
-            all_rows.append(row)
+        all_rows.append(row)
 
 print("Read %d rows" % len(all_rows))
 
