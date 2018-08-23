@@ -46,7 +46,7 @@ def fix_misaligned_row(row):
     return new_row
 
 class CorpusPreparer(object):
-    def get_corpus():
+    def get_corpus(self):
         with open(fpath, 'r') as f:
             reader = csv.DictReader(f, skipinitialspace=True, delimiter='\t')
 
