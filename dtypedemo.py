@@ -38,13 +38,20 @@ def row_is_misaligned(row):
         return True
 
 def fix_misaligned_row(row):
-    return row
+    new_row = row.copy()
+
+    new_row['obv_words_type'] = 's'
+    new_row['words_count'] = row['obv_words_type']
+    new_row['defendant'] = row['words_count']
+
+    return new_row
 
 with open(fpath, 'r') as f:
     reader = csv.DictReader(f, skipinitialspace=True, delimiter='\t')
 
     for index, row in enumerate(reader):
         if row_is_misaligned(row):
+            print("Fixing misaligned row")
             row = fix_misaligned_row(row)
 
         all_rows.append(row)
