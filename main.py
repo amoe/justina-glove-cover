@@ -7,14 +7,15 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 import json
+import corpus
 
 nlp = spacy.load('en_core_web_md')
 sess = tf.InteractiveSession()
+corpus_preparer = corpus.CorpusPreparer()
 
 def get_corpus():
     print('getting corpus data')
-    fpath = 'voa/OBV2/obv_words_v2_28-01-2017.tsv'
-    df = pd.read_csv(fpath, sep='\t')
+    df = corpus_preparer.get_corpus()
 
     female_speech = df.loc[(df['obc_sex'] == 'f') & (df['obc_hiscoLabel'] != 'Lawyer'),'words']
     male_speech = df.loc[df['obc_sex'] == 'm','words'] # male speech including lawyers
